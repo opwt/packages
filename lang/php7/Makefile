@@ -6,7 +6,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=php
-PKG_VERSION:=7.4.7
+PKG_VERSION:=7.4.22
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Michael Heimpold <mhei@heimpold.de>
@@ -16,7 +16,7 @@ PKG_CPE_ID:=cpe:/a:php:php
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://www.php.net/distributions/
-PKG_HASH:=53558f8f24cd8ab6fa0ea252ca8198e2650160649681ce5230c1df1dc2b52faf
+PKG_HASH:=8e078cd7d2f49ac3fcff902490a5bb1addc885e7e3b0d8dd068f42c68297bde8
 
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
@@ -47,7 +47,7 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
 define Package/php7/Default
-  SUBMENU:=PHP
+  SUBMENU:=PHP7
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=PHP7 Hypertext preprocessor
@@ -257,9 +257,9 @@ endif
 
 ifneq ($(SDK)$(CONFIG_PACKAGE_php7-mod-imap),)
   CONFIGURE_ARGS+= \
-		--with-imap=shared,"$(STAGING_DIR)/usr" \
-		--with-kerberos=no \
-		--with-imap-ssl="$(STAGING_DIR)/usr"
+	--with-imap=shared,"$(STAGING_DIR)/usr" \
+	--with-kerberos=no \
+	--with-imap-ssl="$(STAGING_DIR)/usr"
 else
   CONFIGURE_ARGS+= --without-imap
 endif
@@ -530,7 +530,12 @@ endef
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
-	( cd $(PKG_BUILD_DIR); touch configure.ac; ./buildconf --force )
+	$(if $(QUILT),,( cd $(PKG_BUILD_DIR); touch configure.ac; ./buildconf --force ))
+endef
+
+define Build/Configure
+	$(if $(QUILT),( cd $(PKG_BUILD_DIR); touch configure.ac; ./buildconf --force ))
+	$(call Build/Configure/Default)
 endef
 
 define Build/InstallDev
