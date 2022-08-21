@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
-PKG_VERSION:=8.8p1
+PKG_VERSION:=9.0p1
 PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
 		https://ftp.spline.de/pub/OpenBSD/OpenSSH/portable/
-PKG_HASH:=4590890ea9bb9ace4f71ae331785a3a5823232435161960ed5fc86588f331fe9
+PKG_HASH:=03974302161e9ecce32153cfa10012f1e65c8f3750f573a73ab1befd5972a28a
 
 PKG_LICENSE:=BSD ISC
 PKG_LICENSE_FILES:=LICENCE
@@ -174,6 +174,7 @@ CONFIGURE_ARGS += \
 	--with-stackprotect \
 	--with$(if $(CONFIG_OPENSSL_ENGINE),,out)-ssl-engine \
 	--with$(if $(CONFIG_OPENSSH_LIBFIDO2),,out)-security-key-builtin
+	--with-sandbox=rlimit
 	
 ifeq ($(BUILD_VARIANT),with-pam)
 CONFIGURE_ARGS += \
@@ -183,7 +184,7 @@ CONFIGURE_ARGS += \
 	--without-pam
 endif
 
-CONFIGURE_VARS += LD="$(TARGET_CC)"
+CONFIGURE_VARS += LD="$(TARGET_CC)" PATH_PASSWD_PROG="/bin/passwd"
 
 ifeq ($(BUILD_VARIANT),with-pam)
 TARGET_LDFLAGS += -lpthread

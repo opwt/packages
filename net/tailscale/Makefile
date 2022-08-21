@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tailscale
-PKG_VERSION:=1.8.1
-PKG_RELEASE:=1
+PKG_VERSION:=1.28.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=tailscale-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/tailscale/tailscale/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=5d08e9c4cbb51da94951281003f3911933962dad0a85003e4b1852ac7b023bcd
+PKG_HASH:=49a301db994a77b793874a39b7e7b7e84a73371e1fa93f9f8675a68a93a7fdb8
 
-PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
+PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec1@gmail.com>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
 
@@ -27,6 +27,11 @@ PKG_USE_MIPS16:=0
 GO_PKG:=\
 	tailscale.com/cmd/tailscale \
 	tailscale.com/cmd/tailscaled
+
+GO_PKG_LDFLAGS:=-s -w
+GO_PKG_LDFLAGS_X:= \
+	tailscale.com/version.Long=${PKG_VERSION}-${PKG_RELEASE} \
+	tailscale.com/version.Short=${PKG_VERSION}
 
 include $(INCLUDE_DIR)/package.mk
 include ../../lang/golang/golang-package.mk
@@ -71,6 +76,10 @@ define Package/tailscaled/install
 	$(INSTALL_BIN) ./files//tailscale.init $(1)/etc/init.d/tailscale
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_DATA) ./files//tailscale.conf $(1)/etc/config/tailscale
+endef
+
+define Package/tailscaled/conffiles
+/etc/config/tailscale
 endef
 
 $(eval $(call BuildPackage,tailscale))
