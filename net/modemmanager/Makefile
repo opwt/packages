@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=modemmanager
-PKG_SOURCE_VERSION:=1.18.8
-PKG_RELEASE:=$(AUTORELEASE)
+PKG_SOURCE_VERSION:=1.20.2
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.freedesktop.org/mobile-broadband/ModemManager.git
-PKG_MIRROR_HASH:=a9347149ade61f3b4befd9cda105b0d997079d11fd228177c2a4a5557f3166ec
+PKG_MIRROR_HASH:=f138effc693456c5040ec22e17c0a8b41143c3b17b62437462995c297a9150dc
 
 PKG_MAINTAINER:=Nicholas Smith <nicholas@nbembedded.com>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -56,6 +56,7 @@ endef
 MESON_ARGS += \
 	-Dudev=false \
 	-Dudevdir=/lib/udev \
+	-Dtests=false \
 	-Dsystemdsystemunitdir=no \
 	-Dsystemd_suspend_resume=false \
 	-Dsystemd_journal=false \
